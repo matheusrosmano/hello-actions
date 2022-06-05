@@ -47,4 +47,5 @@ jobs:
       - name: Verifica banco ativo
         run: docker ps
 
-      - run: node index.js
+      - name: Executa o script
+        run: node index.js
