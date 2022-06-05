@@ -1,0 +1,41 @@
+name: Create a reusable workflow
+
+on:
+  workflow_call:
+    inputs:
+      nomeBranch:
+        required: true
+        type: string
+      imagemDocker:
+        type: string
+        default: ""
+
+jobs:
+  print_nome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - run: echo ${GITHUB_REF#refs/heads/}
+
+      - name: create file
+        run: |
+          echo ${{ inputs.nomeBranch }} > webhook/hello.txt
+          echo ${{ inputs.nomeBranch }} > "webhook/branch.txt"
+
+      - run: ls -l webhook
+
+      - run: cat webhook/hello.txt
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: webhook-artifact
+          path: webhook
+
+      - name: Variavel opcional
+        run: |
+          if [ -z "${{ inputs.imagemDocker }}" ]; then
+            echo "Variavel não informada."
+          else
+            echo "Variavel informada."
+          fi

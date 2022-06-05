@@ -1,0 +1,44 @@
+name: Push to github and dockerhub
+
+on:
+  push:
+    branches: [ test_reusable ]
+
+jobs:
+  build:
+    name: Builda
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Builda imagem
+        run: |
+          docker build -t imagem-teste:latest -t imagem-teste:${{ github.run_number }} .
+
+      - name: Loga no github
+        run: |
+          echo ${{ secrets.TOKEN_TESTE }} | docker login docker.pkg.github.com -u matheusrosmano --password-stdin
+
+      - name: Loga no dockerhub
+        run: |
+          echo ${{ secrets.TESTE_DOCKERHUB }} | docker login registry-1.docker.io -u matheusrosmano --password-stdin
+
+      - name: Pusha a imagem github
+        run: |
+          docker tag imagem-teste:latest docker.pkg.github.com/matheusrosmano/hello-actions/imagem-teste:latest
+          docker tag imagem-teste:${{ github.run_number }} docker.pkg.github.com/matheusrosmano/hello-actions/imagem-teste:${{ github.run_number }}
+          docker push docker.pkg.github.com/matheusrosmano/hello-actions/imagem-teste --all-tags
+
+      - name: Pusha a imagem pro dockerhub
+        run: |
+          docker tag imagem-teste:${{ github.run_number }} registry-1.docker.io/matheusrosmano/imagem-teste:${{ github.run_number }}
+          docker tag imagem-teste:latest registry-1.docker.io/matheusrosmano/imagem-teste:latest
+          docker push registry-1.docker.io/matheusrosmano/imagem-teste --all-tags
+
+      - name: Show number
+        run: echo ${{ github.run_number }}
+
+      - name: pull image
+        run: |
+          docker pull docker.pkg.github.com/matheusrosmano/hello-actions/imagem-teste:47
+          docker image ls

@@ -1,0 +1,50 @@
+name: Test docker
+
+on:
+  push:
+    paths:
+      - '.github/workflows/action-docker.yml'
+      - 'index.js'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'docker-compose.json'
+      - 'Makefile'
+      - 'dump/**'
+
+jobs:
+  inicia-teste:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cria arquivo .env
+        run: |
+          cat >.env<<EOL
+          MYSQL_ROOT_PASSWORD=123456
+          MYSQL_DATABASE=teste
+          MYSQL_USER=teste
+          MYSQL_PASSWORD=123456
+          EOL
+
+      - run: ls -la
+
+      - run: cat .env
+
+      - name: Inicia o container
+        run: docker-compose up -d
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Verifica banco ativo
+        run: docker ps
+
+      - name: Instala libs
+        run: npm i
+
+      - name: Verifica banco ativo
+        run: docker ps
+
+      - run: node index.js

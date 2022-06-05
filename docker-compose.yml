@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  banco:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    volumes:
+      - dados:/var/lib/mysql
+      - ./dump/teste.sql:/docker-entrypoint-initdb.d/teste.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    command: --default-authentication-plugin=mysql_native_password
+volumes:
+  dados:
