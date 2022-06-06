@@ -1,5 +1,5 @@
 docker-banco-up:
-	command docker-compose up -d
+	command docker-compose up -d banco
 
 docker-banco-down:
 	command docker-compose down

@@ -1,0 +1,11 @@
+FROM node:lts
+
+RUN mkdir /app
+COPY index.js /app
+COPY package.json /app
+COPY package-lock.json /app
+COPY .env.node /app/.env
+
+WORKDIR /app
+
+RUN npm i

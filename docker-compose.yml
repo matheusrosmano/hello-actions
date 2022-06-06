@@ -2,6 +2,7 @@ version: '3.7'
 services:
   banco:
     image: mysql:8.0
+    container_name: mysql
     ports:
       - 3306:3306
     volumes:
@@ -13,5 +14,10 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     command: --default-authentication-plugin=mysql_native_password
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+
 volumes:
   dados:
