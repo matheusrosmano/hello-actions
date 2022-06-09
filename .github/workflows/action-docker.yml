@@ -31,14 +31,13 @@ jobs:
 
       - run: cat .env
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
       - name: Inicia o container
         run: docker-compose up -d banco
+
+      - name: Sleep for 120 seconds
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '120s'
 
       - uses: actions/setup-node@v3
         with:
