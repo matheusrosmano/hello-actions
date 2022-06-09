@@ -46,7 +46,7 @@ jobs:
 
       - name: Executa o node
         run: |
-          npm i
+          yarn install
           node index.js
 
       - name: Verifica banco ativo
